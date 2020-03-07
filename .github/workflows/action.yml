@@ -1,8 +1,8 @@
 name: Testing Action
 on: [pull_request, push]
 jobs:
-  refs:
-    name: refs
+  vars:
+    name: test
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
