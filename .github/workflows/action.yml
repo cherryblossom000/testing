@@ -1,20 +1,24 @@
 name: Testing Action
 on: [pull_request, push]
 jobs:
-  vars:
-    name: vars
+  context:
+    name: context
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
-      - name: github.event
-        run: echo ${{github.event}}
-      - name: github.event.head_commit
-        run: echo ${{github.event.head_commit.message}}
-      - name: ref
-        run: echo ${{github.ref}}
-      - name: head_ref
-        run: echo ${{github.head_ref}}
-        if: github.event_name == 'pull_request'
-      - name: base_ref
-        run: echo ${{github.base_ref}}
-        if: github.event_name == 'pull_request'
+      - name: github
+        run: echo '${{toJson(github)}}'
+      - name: env
+        run: echo '${{toJson(env)}}'
+      - name: job
+        run: echo '${{toJson(job)}}'
+      - name: steps
+        run: echo '${{toJson(steps)}}'
+      - name: runner
+        run: echo '${{toJson(runner)}}'
+      - name: secrets
+        run: echo '${{toJson(secrets)}}'
+      - name: strategy
+        run: echo '${{toJson(strategy)}}'
+      - name: matrix
+        run: echo '${{toJson(matrix)}}'
