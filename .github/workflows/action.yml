@@ -9,7 +9,7 @@ jobs:
       - name: github.event
         run: echo ${{github.event}}
       - name: github.event.head_commit
-
+        run: echo ${{github.event.head_commit.message}}
       - name: ref
         run: echo ${{github.ref}}
       - name: head_ref
