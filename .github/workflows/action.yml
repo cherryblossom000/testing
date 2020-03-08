@@ -15,10 +15,10 @@ jobs:
       - name: commit if necessary
         id: commit
         run: >-
-          echo ${{steps.changes.outputs.status}} &&
-          (git diff-index --quiet HEAD -- ||
-          (git config user.email action@github.com &&
-          git config user.name 'Github Action' &&
-          git commit -m 'some commit' testing))
+          if [[ ! `git diff-index --quiet HEAD --` ]]; then
+            git config user.email action@github.com &&
+            git config user.name 'Github Action' &&
+            git commit -m 'some commit' testing &&
+            echo ::set-output name=push::true
       - name: run if there were changes to commit
-        run: echo ${{steps.commit.outputs.status}}
+        run: echo ${{steps.commit.outputs.push}}
