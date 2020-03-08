@@ -1,16 +1,24 @@
 name: Testing Action
-on:
-  pull_request:
-  push:
-  check_suite:
-    types: [completed]
+on: push
 jobs:
-  context:
-    name: context
+  commit:
+    name: commit
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
-      - name: github
-        run: echo '${{toJson(github)}}'
-      - name: github.event
-        run: echo '${{toJson(github.event)}}'
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: arbitrarily make changes
+        id: changes
+        if: contains(github.event.head_commit.message, 'yes')
+        run: echo test > testing
+      - name: commit if necessary
+        id: commit
+        run: >-
+          echo ${{steps.changes.outputs.status}} &&
+          (git diff-index --quiet HEAD -- ||
+          (git config user.email action@github.com &&
+          git config user.name 'Github Action' &&
+          git commit -m 'some commit' testing))
+      - name: run if there were changes to commit
+        run: echo ${{steps.commit.outputs.status}}
