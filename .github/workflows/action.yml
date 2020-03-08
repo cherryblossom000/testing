@@ -11,7 +11,7 @@ jobs:
       - name: arbitrarily make changes
         id: changes
         if: contains(github.event.head_commit.message, 'yes')
-        run: echo test > testing
+        run: echo test > testing && git add .
       - name: commit if necessary
         id: commit
         run: >-
@@ -21,5 +21,8 @@ jobs:
             git commit -m 'some commit' testing &&
             echo ::set-output name=push::true
           )
-      - name: run if there were changes to commit
+      - name: changes?
         run: echo ${{steps.commit.outputs.push}}
+      - name: run if there were changes to commit
+        if: steps.commit.outputs.push == 'true'
+        run: echo pushing
