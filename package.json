@@ -1,0 +1,12 @@
+{
+  "name": "testing",
+  "version": "0.0.1",
+  "private": true,
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^9.0.0",
+    "semantic-release": "^17.4.2"
+  }
+}

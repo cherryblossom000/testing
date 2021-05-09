@@ -1,28 +1,27 @@
-name: Testing Action
+name: CI
 on: push
 jobs:
-  commit:
-    name: commit
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: arbitrarily make changes
-        id: changes
-        if: contains(github.event.head_commit.message, 'yes')
-        run: echo test > testing && git add .
-      - name: commit if necessary
-        id: commit
-        run: >-
-          git diff-index --quiet HEAD -- || (
-            git config user.email action@github.com &&
-            git config user.name 'Github Action' &&
-            git commit -m 'some commit' testing &&
-            echo ::set-output name=push::true
-          )
-      - name: changes?
-        run: echo ${{steps.commit.outputs.push}}
-      - name: run if there were changes to commit
-        if: steps.commit.outputs.push == 'true'
-        run: echo pushing
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2.1.5
+      with:
+        node-version: '12'
+    - uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git-user-signingkey: true
+        git-commit-gpgsign: true
+        git-tag-gpgsign: true
+        git-push-gpgsign: true
+    - name: Install
+      run: npm i -g pnpm && pnpm i
+    - uses: mxschmitt/action-tmate@v3
+    - name: Release
+      run: pnpx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
