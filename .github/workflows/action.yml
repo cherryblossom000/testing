@@ -1,5 +1,12 @@
 name: CI
-on: push
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 jobs:
   release:
     name: Release
@@ -19,6 +26,7 @@ jobs:
     - name: Install
       run: npm i -g pnpm && pnpm i
     - uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
     - name: Release
       run: pnpx semantic-release
       env:
