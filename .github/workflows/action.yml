@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_COMMITTER_NAME: cherryblossom
-      GIT_COMITTER_EMAIL: 31467609+cherryblossom000@users.noreply.github.com
+      GIT_COMMITTER_EMAIL: 31467609+cherryblossom000@users.noreply.github.com
 
     steps:
     - uses: actions/checkout@v2
