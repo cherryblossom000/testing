@@ -12,20 +12,25 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2.1.5
       with:
         node-version: '12'
+
     - uses: crazy-max/ghaction-import-gpg@v3
       with:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.GPG_PASSPHRASE }}
         git-user-signingkey: true
         git-commit-gpgsign: true
+
     - name: Install
       run: npm i -g pnpm && pnpm i
+
     - uses: mxschmitt/action-tmate@v3
       if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+
     - name: Release
       run: pnpx semantic-release
       env:
