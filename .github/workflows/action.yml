@@ -11,8 +11,11 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    steps:
+    env:
+      GIT_COMMITTER_NAME: cherryblossom
+      GIT_COMITTER_EMAIL: 31467609+cherryblossom000@users.noreply.github.com
 
+    steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2.1.5
       with:
